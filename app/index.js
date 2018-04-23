@@ -9,8 +9,8 @@ const argv = require('yargs')
   })
   .option('port', {
     alias: 'p',
-    describe: 'port for socket listening. ',
-    default:  process.env.SOCKET_PORT
+    describe: 'port for service listening. ',
+    default:  process.env.PORT
   })
   .help('help')
   .argv;

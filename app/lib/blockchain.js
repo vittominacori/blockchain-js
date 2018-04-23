@@ -1,5 +1,4 @@
 const Block = require('./block');
-const Transaction = require('./transaction');
 
 class Blockchain
 {
@@ -23,14 +22,11 @@ class Blockchain
     block.mineBlock(this.difficulty);
 
     this.chain.push(block);
-
-    // TODO add the reward
-    // this.pendingTransactions = [
-    //   new Transaction(null, miningRewardAddress, this.miningReward)
-    // ];
+    this.pendingTransactions = [];
   }
 
   createTransaction (transaction) {
+    // TODO add check on balance and valid transaction amount
     this.pendingTransactions.push(transaction);
   }
 

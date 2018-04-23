@@ -20,6 +20,7 @@ class Block
       this.hash = this.calculateHash();
     }
 
+    // TODO add the reward
     logger.info("Block mined: " + this.hash);
   }
 }
