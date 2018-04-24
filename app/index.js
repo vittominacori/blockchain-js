@@ -12,6 +12,11 @@ const argv = require('yargs')
     describe: 'port for service listening. ',
     default:  process.env.PORT
   })
+  .option('coinbase', {
+    alias: 'c',
+    describe: 'base address for service. ',
+    default:  process.env.COINBASE
+  })
   .help('help')
   .argv;
 

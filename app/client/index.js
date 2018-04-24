@@ -20,6 +20,11 @@ const argv = require('yargs')
     describe: 'port for service listening. ',
     default:  process.env.PORT
   })
+  .option('coinbase', {
+    alias: 'c',
+    describe: 'base address for service. ',
+    default:  process.env.COINBASE
+  })
   .help('help')
   .argv;
 
@@ -28,10 +33,19 @@ global.logger = new Logger(argv.log);
 const api = new Api(`${argv.endpoint}:${argv.port}`);
 
 const trx = {
-  fromAddress: '0x1',
+  fromAddress: argv.coinbase,
   toAddress: '0x2',
   amount: 10
 };
+
+logger.info("Checking balances");
+api.get(`balanceOf/${argv.coinbase}`)
+  .then((res) => {
+    logger.info(`Balance of: ${argv.coinbase} = ${JSON.stringify(res.data)}`);
+  })
+  .catch((error) => {
+    logger.error(JSON.stringify(error.data));
+  });
 
 api.get(`balanceOf/${trx.toAddress}`)
   .then((res) => {
@@ -45,6 +59,23 @@ logger.info(`Creating transaction data ${JSON.stringify(trx)}`);
 api.post('createTransaction', trx)
   .then((res) => {
     logger.info(`Latest block: ${JSON.stringify(res.data)}`);
+  })
+  .catch((error) => {
+    logger.error(JSON.stringify(error.data));
+  });
+
+logger.info("Checking balances");
+api.get(`balanceOf/${argv.coinbase}`)
+  .then((res) => {
+    logger.info(`Balance of: ${argv.coinbase} = ${JSON.stringify(res.data)}`);
+  })
+  .catch((error) => {
+    logger.error(JSON.stringify(error.data));
+  });
+
+api.get(`balanceOf/${trx.toAddress}`)
+  .then((res) => {
+    logger.info(`Balance of: ${trx.toAddress} = ${JSON.stringify(res.data)}`);
   })
   .catch((error) => {
     logger.error(JSON.stringify(error.data));

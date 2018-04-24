@@ -8,7 +8,7 @@ const Transaction = require('../lib/transaction');
 class Service
 {
   constructor (argv) {
-    this.blockchain = new Blockchain();
+    this.blockchain = new Blockchain(argv.coinbase);
     this.server(argv.port)
   };
 
@@ -33,7 +33,7 @@ class Service
       logger.info(`Submitted transaction: ${JSON.stringify(req.body)}`);
       this.blockchain.createTransaction(new Transaction(req.body.fromAddress, req.body.toAddress, req.body.amount));
       logger.debug("Start mining");
-      this.blockchain.minePendingTransactions('coinbase-address');
+      this.blockchain.minePendingTransactions();
       logger.debug(`Latest block: ${JSON.stringify(this.blockchain.getLatestBlock())}`);
       res.json(this.blockchain.getLatestBlock());
     });
