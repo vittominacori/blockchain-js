@@ -32,51 +32,55 @@ global.logger = new Logger(argv.log);
 
 const api = new Api(`${argv.endpoint}:${argv.port}`);
 
-const trx = {
-  fromAddress: argv.coinbase,
-  toAddress: '0x2',
-  amount: 10
-};
+async function demoClient () {
+  const trx = {
+    fromAddress: argv.coinbase,
+    toAddress: '0x2',
+    amount: 10
+  };
 
-logger.info("Checking balances");
-api.get(`balanceOf/${argv.coinbase}`)
-  .then((res) => {
-    logger.info(`Balance of: ${argv.coinbase} = ${JSON.stringify(res.data)}`);
-  })
-  .catch((error) => {
-    logger.error(JSON.stringify(error.data));
-  });
+  logger.info("Checking balances");
+  await api.get(`balanceOf/${argv.coinbase}`)
+    .then((res) => {
+      logger.info(`Balance of: ${argv.coinbase} = ${JSON.stringify(res.data)}`);
+    })
+    .catch((error) => {
+      logger.error(JSON.stringify(error.data));
+    });
 
-api.get(`balanceOf/${trx.toAddress}`)
-  .then((res) => {
-    logger.info(`Balance of: ${trx.toAddress} = ${JSON.stringify(res.data)}`);
-  })
-  .catch((error) => {
-    logger.error(JSON.stringify(error.data));
-  });
+  await api.get(`balanceOf/${trx.toAddress}`)
+    .then((res) => {
+      logger.info(`Balance of: ${trx.toAddress} = ${JSON.stringify(res.data)}`);
+    })
+    .catch((error) => {
+      logger.error(JSON.stringify(error.data));
+    });
 
-logger.info(`Creating transaction data ${JSON.stringify(trx)}`);
-api.post('createTransaction', trx)
-  .then((res) => {
-    logger.info(`Latest block: ${JSON.stringify(res.data)}`);
-  })
-  .catch((error) => {
-    logger.error(JSON.stringify(error.data));
-  });
+  logger.info(`Creating transaction data ${JSON.stringify(trx)}`);
+  await api.post('createTransaction', trx)
+    .then((res) => {
+      logger.info(`Latest block: ${JSON.stringify(res.data)}`);
+    })
+    .catch((error) => {
+      logger.error(JSON.stringify(error.data));
+    });
 
-logger.info("Checking balances");
-api.get(`balanceOf/${argv.coinbase}`)
-  .then((res) => {
-    logger.info(`Balance of: ${argv.coinbase} = ${JSON.stringify(res.data)}`);
-  })
-  .catch((error) => {
-    logger.error(JSON.stringify(error.data));
-  });
+  logger.info("Checking balances");
+  await api.get(`balanceOf/${argv.coinbase}`)
+    .then((res) => {
+      logger.info(`Balance of: ${argv.coinbase} = ${JSON.stringify(res.data)}`);
+    })
+    .catch((error) => {
+      logger.error(JSON.stringify(error.data));
+    });
 
-api.get(`balanceOf/${trx.toAddress}`)
-  .then((res) => {
-    logger.info(`Balance of: ${trx.toAddress} = ${JSON.stringify(res.data)}`);
-  })
-  .catch((error) => {
-    logger.error(JSON.stringify(error.data));
-  });
+  await api.get(`balanceOf/${trx.toAddress}`)
+    .then((res) => {
+      logger.info(`Balance of: ${trx.toAddress} = ${JSON.stringify(res.data)}`);
+    })
+    .catch((error) => {
+      logger.error(JSON.stringify(error.data));
+    });
+}
+
+demoClient();

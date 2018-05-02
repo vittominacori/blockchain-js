@@ -3,7 +3,13 @@ const Block = require('./block');
 class Blockchain
 {
   constructor (coinbase) {
-    // TODO check coinbase
+    if (!coinbase) {
+      logger.error('No coinbase set');
+      process.exit();
+    }
+
+    logger.info(`Coinbase set to "${coinbase}"`);
+
     this.coinbase = coinbase ? coinbase : 0;
     this.miningReward = 100;
     this.chain = [this.createGenesisBlock()];
@@ -13,7 +19,7 @@ class Blockchain
 
   createGenesisBlock () {
     return new Block(
-      Date.now(),
+      0,
       [],
       "0",
       this.coinbase,
@@ -27,7 +33,7 @@ class Blockchain
 
   minePendingTransactions () {
     let block = new Block(
-      Date.now(),
+      this.chain.length,
       this.pendingTransactions,
       this.getLatestBlock().hash,
       this.coinbase,
@@ -40,8 +46,16 @@ class Blockchain
   }
 
   createTransaction (transaction) {
-    // TODO add check on balance and valid transaction amount
+    if (transaction.amount < 0) {
+      logger.error(`Transaction failed: amount must be greater or equal to 0, ${transaction.amount} given`);
+      return false;
+    }
+    if (this.getBalanceOfAddress(transaction.fromAddress) < transaction.amount) {
+      logger.error(`Transaction failed: "${transaction.fromAddress}" has not enough funds`);
+      return false;
+    }
     this.pendingTransactions.push(transaction);
+    return true;
   }
 
   getBalanceOfAddress (address) {
