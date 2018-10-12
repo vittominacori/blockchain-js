@@ -1,16 +1,15 @@
 const Block = require('./block');
 
-class Blockchain
-{
+class Blockchain {
   constructor (coinbase) {
     if (!coinbase) {
-      logger.error('No coinbase set');
+      global.logger.error('No coinbase set');
       process.exit();
     }
 
-    logger.info(`Coinbase set to "${coinbase}"`);
+    global.logger.info(`Coinbase set to "${coinbase}"`);
 
-    this.coinbase = coinbase ? coinbase : 0;
+    this.coinbase = coinbase || 0;
     this.miningReward = 100;
     this.chain = [this.createGenesisBlock()];
     this.difficulty = 2;
@@ -21,7 +20,7 @@ class Blockchain
     return new Block(
       0,
       [],
-      "0",
+      '0',
       this.coinbase,
       this.miningReward
     );
@@ -32,7 +31,7 @@ class Blockchain
   }
 
   minePendingTransactions () {
-    let block = new Block(
+    const block = new Block(
       this.chain.length,
       this.pendingTransactions,
       this.getLatestBlock().hash,
@@ -47,11 +46,11 @@ class Blockchain
 
   createTransaction (transaction) {
     if (transaction.amount < 0) {
-      logger.error(`Transaction failed: amount must be greater or equal to 0, ${transaction.amount} given`);
+      global.logger.error(`Transaction failed: amount must be greater or equal to 0, ${transaction.amount} given`);
       return false;
     }
     if (this.getBalanceOfAddress(transaction.fromAddress) < transaction.amount) {
-      logger.error(`Transaction failed: "${transaction.fromAddress}" has not enough funds`);
+      global.logger.error(`Transaction failed: "${transaction.fromAddress}" has not enough funds`);
       return false;
     }
     this.pendingTransactions.push(transaction);
@@ -61,13 +60,13 @@ class Blockchain
   getBalanceOfAddress (address) {
     let balance = 0;
 
-    for (const block of this.chain){
-      for (const trans of block.transactions){
-        if (trans.fromAddress === address){
+    for (const block of this.chain) {
+      for (const trans of block.transactions) {
+        if (trans.fromAddress === address) {
           balance -= trans.amount;
         }
 
-        if (trans.toAddress === address){
+        if (trans.toAddress === address) {
           balance += trans.amount;
         }
       }
@@ -80,7 +79,7 @@ class Blockchain
   }
 
   isChainValid () {
-    for (let i = 1; i < this.chain.length; i++){
+    for (let i = 1; i < this.chain.length; i++) {
       const currentBlock = this.chain[i];
       const previousBlock = this.chain[i - 1];
 

@@ -5,17 +5,17 @@ const argv = require('yargs')
   .option('log', {
     alias: 'l',
     describe: 'log level for logger. ',
-    default:  process.env.LOG_LEVEL
+    default: process.env.LOG_LEVEL,
   })
   .option('port', {
     alias: 'p',
     describe: 'port for service listening. ',
-    default:  process.env.PORT
+    default: process.env.PORT,
   })
   .option('coinbase', {
     alias: 'c',
     describe: 'base address for service. ',
-    default:  process.env.COINBASE
+    default: process.env.COINBASE,
   })
   .help('help')
   .argv;
@@ -23,4 +23,4 @@ const argv = require('yargs')
 global.logger = new Logger(argv.log);
 
 const Service = require('./service/service.js');
-new Service(argv);
+new Service(argv); /* eslint-disable-line no-new */
